@@ -12,7 +12,9 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List images = [];
+  List<Map<String, dynamic>> allPlaces = []; // Store all places
+  List<Map<String, dynamic>> filteredPlaces = []; // Store filtered places
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -20,25 +22,39 @@ class _ExplorePageState extends State<ExplorePage> {
     fetchApi();
   }
 
-  //fetch data from api
+  // Fetch data from API
   fetchApi() async {
     final response = await http.get(
       Uri.parse(
           'http://192.168.29.163:1337/api/states?populate=state_locations.Visitor_Information'),
     );
-    //print('response: $response');
+
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(response.body);
-      //print('result: $result'); // Debugging: Check the response format
 
       setState(() {
-        images = result['data']; // Extracting the "data" list
+        allPlaces = List<Map<String, dynamic>>.from(result['data']);
+        filteredPlaces = allPlaces; // Initially, show all places
       });
-
-      //print(images); // Debugging: Verify the list is populated
     } else {
       print('Failed to load data: ${response.statusCode}');
     }
+  }
+
+  // Search Functionality
+  void filterSearch(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredPlaces = allPlaces;
+      } else {
+        filteredPlaces = allPlaces
+            .where((place) => place['statename']
+                .toString()
+                .toLowerCase()
+                .contains(query.toLowerCase()))
+            .toList();
+      }
+    });
   }
 
   @override
@@ -50,7 +66,6 @@ class _ExplorePageState extends State<ExplorePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Section
               const Text(
                 'Explore India with',
                 style: TextStyle(
@@ -72,7 +87,8 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
               ),
               const SizedBox(height: 16),
-              // Search Bar
+
+              // Search Bar with Auto-Suggestion
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
@@ -80,6 +96,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
+                  controller: searchController,
+                  onChanged: filterSearch, // Filter on text change
                   decoration: InputDecoration(
                     hintText: 'Find places by state',
                     border: InputBorder.none,
@@ -88,50 +106,29 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Grid Section
+
+              // Grid Section with Filtered Places
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 3 / 4,
-                  ),
-                  itemCount: images.length,
-                  itemBuilder: (context, index) {
-                    return _buildGridItem(
-                        images[index]); // Pass the correct item
-                  },
-                ),
+                child: filteredPlaces.isEmpty
+                    ? const Center(child: Text("No results found"))
+                    : GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 3 / 4,
+                        ),
+                        itemCount: filteredPlaces.length,
+                        itemBuilder: (context, index) {
+                          return _buildGridItem(filteredPlaces[index]);
+                        },
+                      ),
               ),
             ],
           ),
         ),
       ),
-      /*bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '',
-          ),
-        ],
-      ),*/
     );
   }
 
@@ -139,19 +136,22 @@ class _ExplorePageState extends State<ExplorePage> {
   Widget _buildGridItem(Map<String, dynamic> item) {
     return InkWell(
       onTap: () {
-        //print("Locations1: ${item['state_locations']}");
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PlaceDetailScreen(
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PlaceDetailScreen(
               stateName: item['statename'] ?? 'Unknown',
               imageUrl: item['url'] ?? '',
               locations: item['state_locations'] ?? [],
-            )));
+            ),
+          ),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           image: DecorationImage(
-            image: NetworkImage(item['url'] ?? ''), // Use the correct key
+            image: NetworkImage(item['url'] ?? ''),
             fit: BoxFit.cover,
           ),
         ),
@@ -175,7 +175,7 @@ class _ExplorePageState extends State<ExplorePage> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  item['statename'] ?? 'Unknown', // Correct key for state name
+                  item['statename'] ?? 'Unknown',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'destination.dart';
+
 class PlaceDetailScreen extends StatelessWidget {
   final String stateName;
   final String imageUrl;
@@ -49,21 +51,6 @@ class PlaceDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Favorite Button
-                Positioned(
-                  bottom: 16,
-                  right: 16,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.favorite, color: Colors.red),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
               ],
             ),
 
@@ -84,40 +71,9 @@ class PlaceDetailScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Show map',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
                       ],
                     ),
-
-                    /* // Rating
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 20),
-                        const SizedBox(width: 4),
-                        Text(
-                          '4.5',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          ' (355 Reviews)',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),*/
-
                     const SizedBox(height: 16),
-
                     // Description
                     Text(
                       'Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining shopping and ...',
@@ -160,7 +116,8 @@ class PlaceDetailScreen extends StatelessWidget {
                                     ),
                                     itemCount: locations.length,
                                     itemBuilder: (context, index) {
-                                      return _buildLocationCard(locations[index]);
+                                      return _buildLocationCard(
+                                          locations[index],context);
                                     })
                                 : const Center(
                                     child: Text(
@@ -179,46 +136,55 @@ class PlaceDetailScreen extends StatelessWidget {
   }
 }
 
-Widget _buildLocationCard(Map<String, dynamic> location) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      image: DecorationImage(
-        image: NetworkImage(location['image'] ?? ''), // Ensure the key matches
-        fit: BoxFit.cover,
-      ),
-    ),
-    child: Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Colors.black.withOpacity(0.7),
-                Colors.black.withOpacity(0.0),
-              ],
-            ),
-          ),
+Widget _buildLocationCard(Map<String, dynamic> location, BuildContext context) {
+  return InkWell(
+    onTap: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DestinationDetailScreen(),
+          ));
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        image: DecorationImage(
+          image:
+              NetworkImage(location['image'] ?? ''), // Ensure the key matches
+          fit: BoxFit.cover,
         ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              location['locationname'] ?? 'Unknown', // Corrected key
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+      ),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.0),
+                ],
               ),
             ),
           ),
-        ),
-      ],
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                location['locationname'] ?? 'Unknown', // Corrected key
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
-
