@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../feature_statelocation_details/destination.dart';
+import '../../feature_statelocation_details/ui/destination.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
   final String stateName;
   final String imageUrl;
-  final List locations;
+  final List<Map<String, dynamic>> locations;
 
   const PlaceDetailScreen(
       {super.key,
@@ -140,22 +140,26 @@ Widget _buildLocationCard(Map<String, dynamic> location, BuildContext context) {
   return InkWell(
     onTap: () {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DestinationDetailScreen(
-              locationName: location['locationname'] ?? 'Unknown',
-              imageUrl: location['image'] ?? '',
-              description: location['description'][0]['children'][0]['text'] ?? '',
-              visitorInfo: location['Visitor_Information'][0] ?? {},
-            ),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationDetailScreen(
+            locationName: location['locationname'] ?? 'Unknown',
+            imageUrl: location['image'] ?? '',
+            description: location['description']?.isNotEmpty == true
+                ? location['description'][0]['children'][0]['text'] ?? ''
+                : 'No description available',
+            visitorInfo: location['Visitor_Information']?.isNotEmpty == true
+                ? location['Visitor_Information'][0]
+                : {},
+          ),
+        ),
+      );
     },
     child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
-          image:
-              NetworkImage(location['image'] ?? ''), // Ensure the key matches
+          image: NetworkImage(location['image'] ?? ''),
           fit: BoxFit.cover,
         ),
       ),
@@ -179,7 +183,7 @@ Widget _buildLocationCard(Map<String, dynamic> location, BuildContext context) {
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(
-                location['locationname'] ?? 'Unknown', // Corrected key
+                location['locationname'] ?? 'Unknown',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -193,3 +197,4 @@ Widget _buildLocationCard(Map<String, dynamic> location, BuildContext context) {
     ),
   );
 }
+

@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:yatra/features/feature_state/place_details.dart';
+import 'package:yatra/features/feature_state/ui/place_details.dart';
+
+import '../model/state_model.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -12,8 +14,8 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<Map<String, dynamic>> allPlaces = []; // Store all places
-  List<Map<String, dynamic>> filteredPlaces = []; // Store filtered places
+  List<StateModel> allPlaces = []; // Store all places as StateModel objects
+  List<StateModel> filteredPlaces = []; // Store filtered places as StateModel objects
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -25,33 +27,42 @@ class _ExplorePageState extends State<ExplorePage> {
   // Fetch data from API
   fetchApi() async {
     final response = await http.get(
-      Uri.parse(
-          'http://192.168.0.103:1337/api/states?populate=state_locations.Visitor_Information'),
+      Uri.parse('http://192.168.0.103:1337/api/states?populate=state_locations.Visitor_Information'),
     );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(response.body);
+      print("API Response: ${jsonEncode(result)}"); // 🛠 Debugging step
+
+      List<StateModel> fetchedStates = (result['data'] as List?)
+          ?.map((state) => StateModel.fromJson(state))
+          .toList() ?? [];
+
+      print("Fetched States: $fetchedStates"); // 🛠 Debugging step
 
       setState(() {
-        allPlaces = List<Map<String, dynamic>>.from(result['data']);
-        filteredPlaces = allPlaces; // Initially, show all places
+        allPlaces = fetchedStates;
+        filteredPlaces = List.from(allPlaces);
       });
+
+      print("All Places Length: ${allPlaces.length}"); // 🛠 Debugging step
     } else {
       print('Failed to load data: ${response.statusCode}');
     }
   }
 
+
+
+
   // Search Functionality
   void filterSearch(String query) {
     setState(() {
       if (query.isEmpty) {
-        filteredPlaces = allPlaces;
+        filteredPlaces = List.from(allPlaces);
       } else {
         filteredPlaces = allPlaces
-            .where((place) => place['statename']
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()))
+            .where((place) =>
+            place.stateName.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
     });
@@ -112,18 +123,18 @@ class _ExplorePageState extends State<ExplorePage> {
                 child: filteredPlaces.isEmpty
                     ? const Center(child: Text("No results found"))
                     : GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 3 / 4,
-                        ),
-                        itemCount: filteredPlaces.length,
-                        itemBuilder: (context, index) {
-                          return _buildGridItem(filteredPlaces[index]);
-                        },
-                      ),
+                  gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 3 / 4,
+                  ),
+                  itemCount: filteredPlaces.length,
+                  itemBuilder: (context, index) {
+                    return _buildGridItem(filteredPlaces[index]);
+                  },
+                ),
               ),
             ],
           ),
@@ -133,16 +144,16 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   // Widget for each grid item
-  Widget _buildGridItem(Map<String, dynamic> item) {
+  Widget _buildGridItem(StateModel item) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => PlaceDetailScreen(
-              stateName: item['statename'] ?? 'Unknown',
-              imageUrl: item['url'] ?? '',
-              locations: item['state_locations'] ?? [],
+              stateName: item.stateName,
+              imageUrl: item.imageUrl ?? '',
+              locations: item.locations, // Now correctly passed as List<Map<String, dynamic>>
             ),
           ),
         );
@@ -151,7 +162,7 @@ class _ExplorePageState extends State<ExplorePage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           image: DecorationImage(
-            image: NetworkImage(item['url'] ?? ''),
+            image: NetworkImage(item.imageUrl ?? ''),
             fit: BoxFit.cover,
           ),
         ),
@@ -175,7 +186,7 @@ class _ExplorePageState extends State<ExplorePage> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  item['statename'] ?? 'Unknown',
+                  item.stateName,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
