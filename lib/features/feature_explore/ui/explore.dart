@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:yatra/place_details.dart';
+import 'package:yatra/features/feature_state/place_details.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -26,7 +26,7 @@ class _ExplorePageState extends State<ExplorePage> {
   fetchApi() async {
     final response = await http.get(
       Uri.parse(
-          'http://192.168.29.163:1337/api/states?populate=state_locations.Visitor_Information'),
+          'http://192.168.0.103:1337/api/states?populate=state_locations.Visitor_Information'),
     );
 
     if (response.statusCode == 200) {

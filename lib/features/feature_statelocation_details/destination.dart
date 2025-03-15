@@ -1,8 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DestinationDetailScreen extends StatelessWidget {
-  const DestinationDetailScreen({super.key});
+  final String locationName;
+  final String imageUrl;
+  final String description;
+  final Map<String, dynamic> visitorInfo;
+
+  const DestinationDetailScreen({
+    super.key,
+    required this.locationName,
+    required this.imageUrl,
+    required this.description,
+    required this.visitorInfo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +29,7 @@ class DestinationDetailScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
                 child: Image.network(
-                  'https://www.ttrikon.com/system/images/000/765/742/fe60c309bc37f5b4cedb6a8c8af26e70/x600gt/Kedarnath.jpg?1723099395',
+                  imageUrl,
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -66,11 +79,13 @@ class DestinationDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Coeurdes Alpes',
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          locationName,
+                          style: GoogleFonts.poppins(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       TextButton(
@@ -109,8 +124,7 @@ class DestinationDetailScreen extends StatelessWidget {
 
                   // Description
                   Text(
-                    'Aspen is as close as one can get to a storybook alpine town in America. '
-                        'The choose-your-own-adventure possibilities—skiing, hiking, dining, shopping, and more.',
+                    description,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -137,7 +151,7 @@ class DestinationDetailScreen extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // Tabs for Gallery, Description, and Visitor Information
-                  Expanded(
+                  Flexible(
                     child: DefaultTabController(
                       length: 3,
                       child: Column(
@@ -207,9 +221,7 @@ class DestinationDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
         child: Text(
-          "Kedarnath is a Hindu temple dedicated to Lord Shiva, located in the Himalayas. "
-              "It is one of the 12 Jyotirlingas and a significant pilgrimage site in India. "
-              "Surrounded by breathtaking mountains, it attracts thousands of devotees and trekkers every year.",
+          description,
           style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[700]),
         ),
       ),
@@ -230,23 +242,34 @@ class DestinationDetailScreen extends StatelessWidget {
                 "Location",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text("Uttarakhand, India"),
+              subtitle: Text(
+                visitorInfo['address'] ?? "Address not available",
+                style: GoogleFonts.poppins(),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.access_time, color: Colors.blue),
               title: Text(
-                "Best Time to Visit",
+                "opening_hours",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text("April - November"),
+              subtitle:  Text(visitorInfo['opening_hours']),
             ),
             ListTile(
-              leading: const Icon(Icons.directions, color: Colors.blue),
+              leading: const Icon(Icons.money, color: Colors.blue),
               title: Text(
-                "How to Reach",
+                "entry_fee",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text("By trekking, helicopter services, or road transport."),
+              subtitle: Text(visitorInfo['entry_fee']),
+            ),
+            ListTile(
+              leading: const Icon(Icons.contact_phone, color: Colors.blue),
+              title: Text(
+                "contact_information",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(visitorInfo['contact_information']),
             ),
           ],
         ),

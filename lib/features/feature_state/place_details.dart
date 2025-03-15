@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'destination.dart';
+import '../feature_statelocation_details/destination.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
   final String stateName;
@@ -142,7 +142,12 @@ Widget _buildLocationCard(Map<String, dynamic> location, BuildContext context) {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DestinationDetailScreen(),
+            builder: (context) => DestinationDetailScreen(
+              locationName: location['locationname'] ?? 'Unknown',
+              imageUrl: location['image'] ?? '',
+              description: location['description'][0]['children'][0]['text'] ?? '',
+              visitorInfo: location['Visitor_Information'][0] ?? {},
+            ),
           ));
     },
     child: Container(
