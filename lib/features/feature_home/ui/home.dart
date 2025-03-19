@@ -8,6 +8,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const colorizeColors = [
+      Colors.purple,
+      Colors.blue,
+      Colors.yellow,
+      Colors.red,
+    ];
     return Scaffold(
       body: Stack(
         children: [
@@ -26,16 +32,20 @@ class HomePage extends StatelessWidget {
               children: [
                 const SizedBox(height: 50),
                 // Aspen Text
-                Text(
-                  'Yatra',
-                  style: GoogleFonts.caveat(
-                    fontSize: 92,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
+                AnimatedTextKit(
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      'yatra',
+                      textStyle: GoogleFonts.caveat( // Apply Google Font styling
+                        fontSize: 92,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: colorizeColors,
+                    ),
+                  ],
+                  repeatForever: true,
                 ),
                 const Spacer(),
-
                 // Plan your Luxurious Vacation
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +80,8 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                       repeatForever: true, // repeat in loop
-                      pause: const Duration(milliseconds: 500), // Pause between words
+                      pause: const Duration(
+                          milliseconds: 500), // Pause between words
                     ),
                   ],
                 ),
