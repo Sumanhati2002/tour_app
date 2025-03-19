@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import '../../feature_explore/ui/explore.dart';
 
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DestinationDetailScreen extends StatelessWidget {
+class DestinationDetailScreen extends StatefulWidget {
   final String locationName;
   final String imageUrl;
   final String description;
@@ -16,6 +16,14 @@ class DestinationDetailScreen extends StatelessWidget {
   });
 
   @override
+  State<DestinationDetailScreen> createState() =>
+      _DestinationDetailScreenState();
+}
+
+class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
+  bool isExpand = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -25,9 +33,10 @@ class DestinationDetailScreen extends StatelessWidget {
             children: [
               // Main Image
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(32)),
                 child: Image.network(
-                  imageUrl,
+                  widget.imageUrl,
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -79,7 +88,7 @@ class DestinationDetailScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          locationName,
+                          widget.locationName,
                           style: GoogleFonts.poppins(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -122,17 +131,24 @@ class DestinationDetailScreen extends StatelessWidget {
 
                   // Description
                   Text(
-                    description,
+                    widget.description,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.grey[600],
                     ),
+                    maxLines: isExpand ? null : 2,
+                    overflow:
+                        isExpand ? TextOverflow.visible : TextOverflow.ellipsis,
                   ),
 
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        isExpand = !isExpand;
+                      });
+                    },
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: const Text('Read more'),
+                    child: Text(isExpand ? 'read less' : 'read more'),
                   ),
 
                   const SizedBox(height: 24),
@@ -167,9 +183,9 @@ class DestinationDetailScreen extends StatelessWidget {
                           Expanded(
                             child: TabBarView(
                               children: [
-                                _buildGalleryTab(),       // Gallery Tab
-                                _buildDescriptionTab(),   // Description Tab
-                                _buildVisitorInfoTab(),   // Visitor Info Tab
+                                _buildGalleryTab(), // Gallery Tab
+                                _buildDescriptionTab(), // Description Tab
+                                _buildVisitorInfoTab(), // Visitor Info Tab
                               ],
                             ),
                           ),
@@ -219,7 +235,7 @@ class DestinationDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
         child: Text(
-          description,
+          widget.description,
           style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[700]),
         ),
       ),
@@ -241,7 +257,7 @@ class DestinationDetailScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                visitorInfo['address'] ?? "Address not available",
+                widget.visitorInfo['address'] ?? "Address not available",
                 style: GoogleFonts.poppins(),
               ),
             ),
@@ -251,7 +267,7 @@ class DestinationDetailScreen extends StatelessWidget {
                 "opening_hours",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle:  Text(visitorInfo['opening_hours']),
+              subtitle: Text(widget.visitorInfo['opening_hours']),
             ),
             ListTile(
               leading: const Icon(Icons.money, color: Colors.blue),
@@ -259,7 +275,7 @@ class DestinationDetailScreen extends StatelessWidget {
                 "entry_fee",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(visitorInfo['entry_fee']),
+              subtitle: Text(widget.visitorInfo['entry_fee']),
             ),
             ListTile(
               leading: const Icon(Icons.contact_phone, color: Colors.blue),
@@ -267,7 +283,7 @@ class DestinationDetailScreen extends StatelessWidget {
                 "contact_information",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(visitorInfo['contact_information']),
+              subtitle: Text(widget.visitorInfo['contact_information']),
             ),
           ],
         ),

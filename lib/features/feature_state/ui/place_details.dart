@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../feature_statelocation_details/ui/destination.dart';
 
-class PlaceDetailScreen extends StatelessWidget {
+class PlaceDetailScreen extends StatefulWidget {
   final String stateName;
   final String imageUrl;
   final List<Map<String, dynamic>> locations;
@@ -13,6 +13,13 @@ class PlaceDetailScreen extends StatelessWidget {
       required this.stateName,
       required this.imageUrl,
       required this.locations});
+
+  @override
+  State<PlaceDetailScreen> createState() => _PlaceDetailScreenState();
+}
+
+class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ class PlaceDetailScreen extends StatelessWidget {
                 // Main Image
                 ClipRRect(
                   child: Image.network(
-                    imageUrl,
+                    widget.imageUrl,
                     height: 300,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -65,7 +72,7 @@ class PlaceDetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          stateName,
+                          widget.stateName,
                           style: GoogleFonts.poppins(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -76,17 +83,28 @@ class PlaceDetailScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     // Description
                     Text(
-                      'Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining shopping and ...',
+                      'Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining, shopping, and much more make it a perfect travel destination.',
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.grey[600],
                       ),
+                      maxLines: isExpanded ? null : 2,
+                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                     ),
-
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          isExpanded = !isExpanded;
+                        });
+                      },
                       style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      child: const Text('Read more'),
+                      child: Text(
+                        isExpanded ? 'Read less' : 'Read more',
+                        style: const TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
 
                     const SizedBox(height: 24),
@@ -105,7 +123,7 @@ class PlaceDetailScreen extends StatelessWidget {
                     Expanded(
                         child: Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: locations.isNotEmpty
+                            child: widget.locations.isNotEmpty
                                 ? GridView.builder(
                                     gridDelegate:
                                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -114,10 +132,10 @@ class PlaceDetailScreen extends StatelessWidget {
                                       mainAxisSpacing: 10,
                                       childAspectRatio: 3 / 4,
                                     ),
-                                    itemCount: locations.length,
+                                    itemCount: widget.locations.length,
                                     itemBuilder: (context, index) {
                                       return _buildLocationCard(
-                                          locations[index],context);
+                                          widget.locations[index], context);
                                     })
                                 : const Center(
                                     child: Text(
@@ -197,4 +215,3 @@ Widget _buildLocationCard(Map<String, dynamic> location, BuildContext context) {
     ),
   );
 }
-
