@@ -1,8 +1,8 @@
-
-
+/*
 import '../../feature_statelocation_details/model/visitorInfo_model.dart';
+*/
 
-class LocationModel {
+/*class LocationModel {
   final String locationName;
   final String imageUrl;
   final String description;
@@ -23,4 +23,4 @@ class LocationModel {
       visitorInfo: VisitorInfoModel.fromJson(json['Visitor_Information']?[0] ?? {}),
     );
   }
-}
+}*/

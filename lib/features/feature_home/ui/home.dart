@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:animated_text_kit/animated_text_kit.dart';
 import '../../feature_explore/ui/explore.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,12 +12,11 @@ class HomePage extends StatelessWidget {
       body: Stack(
         children: [
           // Background Image
-          Image.network(
-            'https://www.olankatravels.com/wp-content/uploads/2022/03/Best-couple-activities-in-Maldives-Honeymoon-by-olanka-Travels.jpg',
-            fit: BoxFit.cover,
-            height: double.infinity,
+          Image.asset(
+            'assets/image/solo_travelling_banner.jpg',
             width: double.infinity,
-            alignment: Alignment.center,
+            height: double.infinity,
+            fit: BoxFit.cover,
           ),
           //content
           SafeArea(
@@ -25,14 +24,14 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-                const SizedBox(height: 80),
+                const SizedBox(height: 50),
                 // Aspen Text
                 Text(
                   'Yatra',
                   style: GoogleFonts.caveat(
                     fontSize: 92,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black38,
                   ),
                 ),
                 const Spacer(),
@@ -49,21 +48,29 @@ class HomePage extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    Text(
-                      'Luxurious',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      'Vacation',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText(
+                          'Luxurious',
+                          textStyle: GoogleFonts.montserrat(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          speed: const Duration(milliseconds: 100),
+                        ),
+                        TypewriterAnimatedText(
+                          'Vacation',
+                          textStyle: GoogleFonts.montserrat(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          speed: const Duration(milliseconds: 100),
+                        ),
+                      ],
+                      repeatForever: true, // repeat in loop
+                      pause: const Duration(milliseconds: 500), // Pause between words
                     ),
                   ],
                 ),

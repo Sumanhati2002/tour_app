@@ -1,4 +1,4 @@
-class VisitorInfoModel {
+/*class VisitorInfoModel {
   final String address;
   final String openingHours;
   final String entryFee;
@@ -19,4 +19,4 @@ class VisitorInfoModel {
       contactInfo: json['contact_information'] ?? 'Not Available',
     );
   }
-}
+}*/

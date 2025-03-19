@@ -14,8 +14,8 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<StateModel> allPlaces = []; // Store all places as StateModel objects
-  List<StateModel> filteredPlaces = []; // Store filtered places as StateModel objects
+  List<StateModel> allPlaces = [];
+  List<StateModel> filteredPlaces = [];
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -27,25 +27,24 @@ class _ExplorePageState extends State<ExplorePage> {
   // Fetch data from API
   fetchApi() async {
     final response = await http.get(
-      Uri.parse('http://192.168.0.103:1337/api/states?populate=state_locations.Visitor_Information'),
+      Uri.parse('http://192.168.29.163:1337/api/states?populate=state_locations.Visitor_Information'),
     );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(response.body);
-      print("API Response: ${jsonEncode(result)}"); // 🛠 Debugging step
-
+      //print("API Response: ${jsonEncode(result)}");
       List<StateModel> fetchedStates = (result['data'] as List?)
           ?.map((state) => StateModel.fromJson(state))
           .toList() ?? [];
 
-      print("Fetched States: $fetchedStates"); // 🛠 Debugging step
+      //print("Fetched States: $fetchedStates");
 
       setState(() {
         allPlaces = fetchedStates;
         filteredPlaces = List.from(allPlaces);
       });
 
-      print("All Places Length: ${allPlaces.length}"); // 🛠 Debugging step
+      //print("All Places Length: ${allPlaces.length}");
     } else {
       print('Failed to load data: ${response.statusCode}');
     }

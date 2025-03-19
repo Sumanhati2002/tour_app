@@ -1,7 +1,7 @@
 class StateModel {
   final String stateName;
   final String? imageUrl;
-  final List<Map<String, dynamic>> locations; // Ensure it's a List<Map>
+  final List<Map<String, dynamic>> locations; 
 
   StateModel({
     required this.stateName,
