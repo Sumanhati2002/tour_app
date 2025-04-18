@@ -25,6 +25,7 @@ class HomePage extends StatelessWidget {
             height: double.infinity,
             fit: BoxFit.cover,
           ),
+
           //content
           SafeArea(
               child: Padding(
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 50),
-                // Aspen Text
+                // yatra Text
                 AnimatedTextKit(
                   animatedTexts: [
                     ColorizeAnimatedText(

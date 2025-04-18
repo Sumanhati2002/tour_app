@@ -1,22 +1,29 @@
-/*class VisitorInfoModel {
-  final String address;
-  final String openingHours;
-  final String entryFee;
-  final String contactInfo;
+class VisitorInformation{
+  final String? address;
+  final String? openingHours;
+  final String? entryFee;
+  final String? contactInformation;
 
-  VisitorInfoModel({
+  VisitorInformation({
     required this.address,
     required this.openingHours,
     required this.entryFee,
-    required this.contactInfo,
+    required this.contactInformation,
   });
-
-  factory VisitorInfoModel.fromJson(Map<String, dynamic> json) {
-    return VisitorInfoModel(
-      address: json['address'] ?? 'Not Available',
-      openingHours: json['opening_hours'] ?? 'Not Available',
-      entryFee: json['entry_fee'] ?? 'Free',
-      contactInfo: json['contact_information'] ?? 'Not Available',
+  factory VisitorInformation.fromJson(Map<String, dynamic> json) {
+    return VisitorInformation(
+      address: (json['address'] ?? '').toString(),
+      openingHours: (json['opening_hours'] ?? '').toString(),
+      entryFee: (json['entry_fee'] ?? '').toString(),
+      contactInformation: (json['contact_information'] ?? '').toString(),
     );
   }
-}*/
+  factory VisitorInformation.empty() {
+    return VisitorInformation(
+      address: '',
+      openingHours: '',
+      entryFee: '',
+      contactInformation: '',
+    );
+  }
+}

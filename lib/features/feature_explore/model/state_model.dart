@@ -1,22 +1,29 @@
+import '../../feature_state/model/location_model.dart';
+
 class StateModel {
+  final int id;
   final String stateName;
   final String? imageUrl;
-  final List<Map<String, dynamic>> locations; 
+  final String? stateDescription;
+  final List<StateLocation> locations;
 
   StateModel({
+    required this.id,
     required this.stateName,
     this.imageUrl,
+    this.stateDescription,
     required this.locations,
   });
 
   factory StateModel.fromJson(Map<String, dynamic> json) {
     return StateModel(
-      stateName: json['statename'] ?? '',
-      imageUrl: json['url'],
-      locations: (json['state_locations'] as List?)
-          ?.map((loc) => loc as Map<String, dynamic>)
-          .toList() ??
-          [],
+      id: json['id']??0,
+      stateName: (json['statename'] ?? '').toString().trim(),
+      imageUrl: (json['url'] ?? '').toString(),
+      stateDescription: (json['statedescription'] ?? '').toString(),
+      locations: (json['state_locations'] as List<dynamic>)
+          .map((e) => StateLocation.fromJson(e))
+          .toList(),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -31,18 +30,18 @@ class _ExplorePageState extends State<ExplorePage> {
   fetchApi() async {
     final response = await http.get(
       Uri.parse(
-          'http://192.168.29.163:1337/api/states?populate=state_locations.Visitor_Information'),
+          'https://tour-app-vlcc.onrender.com/api/states?populate=state_locations.Visitor_Information'),
     );
-
+    print("check....${response.body}");
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(response.body);
-      //print("API Response: ${jsonEncode(result)}");
+     print("API Response: ${jsonEncode(result)}");
       List<StateModel> fetchedStates = (result['data'] as List?)
               ?.map((state) => StateModel.fromJson(state))
               .toList() ??
           [];
 
-      //print("Fetched States: $fetchedStates");
+     print("Fetched location: ${fetchedStates[0].locations}");
 
       setState(() {
         allPlaces = fetchedStates;
@@ -74,6 +73,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       body: Stack(
         children: [
+          //background image
           ImageFiltered(
             imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
             child: Image.asset(
@@ -103,27 +103,22 @@ class _ExplorePageState extends State<ExplorePage> {
                     repeatForever: true,
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomePage(),
-                              ));
-                        },
-                        child: Text(
-                          'Yatra',
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ));
+                    },
+                    child: Text(
+                      'Yatra',
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 16),
 
@@ -187,8 +182,9 @@ class _ExplorePageState extends State<ExplorePage> {
             builder: (context) => PlaceDetailScreen(
               stateName: item.stateName,
               imageUrl: item.imageUrl ?? '',
+              stateDescription: item.stateDescription ?? '',
               locations: item
-                  .locations, // Now correctly passed as List<Map<String, dynamic>>
+                  .locations,
             ),
           ),
         );

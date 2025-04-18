@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:yatra/features/feature_statelocation_details/model/visitorInfo_model.dart';
 
 class DestinationDetailScreen extends StatefulWidget {
   final String locationName;
   final String imageUrl;
   final String description;
-  final Map<String, dynamic> visitorInfo;
+  final VisitorInformation visitorInfo;
 
   const DestinationDetailScreen({
     super.key,
@@ -58,7 +59,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                 ),
               ),
               // Favorite Button
-              Positioned(
+              /*Positioned(
                 bottom: 16,
                 right: 16,
                 child: Container(
@@ -71,7 +72,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                     onPressed: () {},
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
 
@@ -106,7 +107,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                   ),
 
                   // Rating
-                  Row(
+                  /*Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 20),
                       const SizedBox(width: 4),
@@ -125,7 +126,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
 
                   const SizedBox(height: 16),
 
@@ -257,7 +258,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                widget.visitorInfo['address'] ?? "Address not available",
+                widget.visitorInfo.address ?? "Address not available",
                 style: GoogleFonts.poppins(),
               ),
             ),
@@ -267,7 +268,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                 "opening_hours",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(widget.visitorInfo['opening_hours']),
+              subtitle: Text(widget.visitorInfo.openingHours??'No opening hours available'),
             ),
             ListTile(
               leading: const Icon(Icons.money, color: Colors.blue),
@@ -275,7 +276,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                 "entry_fee",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(widget.visitorInfo['entry_fee']),
+              subtitle: Text(widget.visitorInfo.entryFee??''),
             ),
             ListTile(
               leading: const Icon(Icons.contact_phone, color: Colors.blue),
@@ -283,7 +284,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                 "contact_information",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(widget.visitorInfo['contact_information']),
+              subtitle: Text(widget.visitorInfo.contactInformation??''),
             ),
           ],
         ),
