@@ -1,9 +1,18 @@
-import '../../feature_statelocation_details/model/visitorInfo_model.dart';
+import 'package:hive/hive.dart';
 
-class StateLocation {
+import '../../feature_statelocation_details/model/visitorInfo_model.dart';
+part 'location_model.g.dart';
+
+@HiveType(typeId: 1)
+class StateLocation extends HiveObject{
+
+  @HiveField(0)
   final String? locationname;
+  @HiveField(1)
   final String description;
+  @HiveField(2)
   final String image;
+  @HiveField(3)
   final List<VisitorInformation> visitorInformation;
 
   StateLocation({
@@ -21,14 +30,23 @@ class StateLocation {
         .expand((children) => children)
         .map((child) => child['text'])
         .whereType<String>()
-        .join(' '); // optional: separate sentences with a space
+        .join(' ');
     return StateLocation(
-      locationname: (json['locationname']??'').toString(),
+      locationname: (json['locationname'] ?? '').toString(),
       description: descriptionText,
-      image: (json['image']??'').toString(),
+      image: (json['image'] ?? '').toString(),
       visitorInformation: (json['Visitor_Information'] as List<dynamic>)
           .map((e) => VisitorInformation.fromJson(e))
           .toList(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'locationname': locationname,
+      'url': image,
+      'description': description,
+      'Visitor_Information': visitorInformation.map((e) => e.toJson()).toList(),
+    };
   }
 }

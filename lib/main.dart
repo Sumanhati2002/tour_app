@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:yatra/features/feature_explore/model/state_model.dart';
 
 import 'features/feature_home/ui/home.dart';
+import 'features/feature_state/model/location_model.dart';
+import 'features/feature_statelocation_details/model/visitorInfo_model.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(StateModelAdapter());
+  Hive.registerAdapter(StateLocationAdapter());
+  Hive.registerAdapter(VisitorInformationAdapter());
+
+  //await Hive.openBox<StateModel>('statesBox');
   runApp(const MyApp());
 }
 

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:yatra/features/feature_state/ui/place_details.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -23,7 +25,9 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   void initState() {
     super.initState();
-    fetchApi();
+    checkConnectivityAndLoad();
+    //loadFromHive();
+    //fetchApi();
   }
 
   // Fetch data from API
@@ -43,6 +47,11 @@ class _ExplorePageState extends State<ExplorePage> {
 
      print("Fetched location: ${fetchedStates[0].locations}");
 
+     //save data to Hive
+      final box = await Hive.openBox<StateModel>('statesBox');
+      await box.clear(); // clear old data before storing new
+      await box.addAll(fetchedStates);
+
       setState(() {
         allPlaces = fetchedStates;
         filteredPlaces = List.from(allPlaces);
@@ -51,6 +60,43 @@ class _ExplorePageState extends State<ExplorePage> {
       //print("All Places Length: ${allPlaces.length}");
     } else {
       print('Failed to load data: ${response.statusCode}');
+    }
+  }
+
+  //load from hive if offline
+  loadFromHive() async {
+    try {
+    final box = await Hive.openBox<StateModel>('statesBox');
+    final cachedStates = box.values.toList();
+    print('Total items in Hive: ${box.length}');
+
+    setState(() {
+      allPlaces = cachedStates;
+      filteredPlaces = List.from(allPlaces);
+    });
+  }
+  catch(e){
+    print('Error loading from Hive: $e');
+  }
+  }
+
+  //check internet connection forst
+  Future<void> checkConnectivityAndLoad() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      print('No internet. Loading from Hive.');
+      await loadFromHive();
+
+      //show snack bar after loading offline data
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("You're offline. check your connection.")),
+        );
+      }
+    } else {
+      print('Internet available. Fetching API.');
+      await fetchApi();
     }
   }
 
@@ -175,7 +221,7 @@ class _ExplorePageState extends State<ExplorePage> {
   // Widget for each grid item
   Widget _buildGridItem(StateModel item) {
     return InkWell(
-      onTap: () {
+      onTap: () async{
         Navigator.push(
           context,
           MaterialPageRoute(

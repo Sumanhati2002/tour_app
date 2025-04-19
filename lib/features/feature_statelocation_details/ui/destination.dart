@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yatra/features/feature_statelocation_details/model/visitorInfo_model.dart';
@@ -24,8 +25,45 @@ class DestinationDetailScreen extends StatefulWidget {
 class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
   bool isExpand = false;
 
+  bool isOnline = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkInternet();
+  }
+
+  void checkInternet() async {
+    var result = await Connectivity().checkConnectivity();
+    setState(() {
+      isOnline = result != ConnectivityResult.none;
+    });
+    if (!isOnline) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("You're offline. check your connection"),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!isOnline) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            "No Internet Connection",
+            style: GoogleFonts.poppins(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       body: Column(
         children: [

@@ -1,7 +1,16 @@
-class VisitorInformation{
+import 'package:hive/hive.dart';
+part 'visitorInfo_model.g.dart';
+
+@HiveType(typeId: 2)
+class VisitorInformation extends HiveObject{
+  
+  @HiveField(0)
   final String? address;
+  @HiveField(1)
   final String? openingHours;
+  @HiveField(2)
   final String? entryFee;
+  @HiveField(3)
   final String? contactInformation;
 
   VisitorInformation({
@@ -25,5 +34,14 @@ class VisitorInformation{
       entryFee: '',
       contactInformation: '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'address': address,
+      'opening_hours': openingHours,
+      'entry_fee': entryFee,
+      'contact_information': contactInformation,
+    };
   }
 }
