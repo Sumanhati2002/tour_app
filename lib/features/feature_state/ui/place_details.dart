@@ -111,7 +111,7 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  //const SizedBox(height: 16),
                   // Description
                   Text(
                     widget.stateDescription,
@@ -140,7 +140,7 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
+                  //const SizedBox(height: 24),
 
                   // Facilities
                   Text(
@@ -151,7 +151,7 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                 // const SizedBox(height: 16),
                   // List of Locations in the State
                   Expanded(
                       child: Padding(

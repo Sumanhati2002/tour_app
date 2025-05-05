@@ -134,13 +134,13 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                           ),
                         ),
                       ),
-                      TextButton(
+                      /*TextButton(
                         onPressed: () {},
                         child: const Text(
                           'Show map',
                           style: TextStyle(color: Colors.blue),
                         ),
-                      ),
+                      ),*/
                     ],
                   ),
 
@@ -166,7 +166,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                     ],
                   ),*/
 
-                  const SizedBox(height: 16),
+                  //const SizedBox(height: 16),
 
                   // Description
                   Text(
@@ -190,7 +190,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                     child: Text(isExpand ? 'read less' : 'read more'),
                   ),
 
-                  const SizedBox(height: 24),
+                 // const SizedBox(height: 24),
 
                   // Facilities Title
                   Text(
@@ -201,7 +201,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  //const SizedBox(height: 16),
 
                   // Tabs for Gallery, Description, and Visitor Information
                   Flexible(
